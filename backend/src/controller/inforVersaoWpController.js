@@ -4,7 +4,7 @@ const obterVersaoWordPress = require("../obterVersaoWP");
 const model = require("../model/versaoWpSchemaModel");
 
 module.exports = {
-    postInforVersaoWordPress : async (req, res)=>{
+    postInforVersaoWordPress : async (req, res, urlFromFunc = null)=>{
         try {
             const {url, versaoWp} = req.body
             console.log("url: ", url)

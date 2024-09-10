@@ -1,8 +1,6 @@
 const axios = require("axios");
 
-const url = process.argv[2];
-
-async function informacaoTema() {
+async function informacaoTema(url) {
   try {
     const resposta = await axios.get(url);
     const html = resposta.data;

@@ -7,7 +7,7 @@ const scanVulnerabilidadePlugin = require('../scanVulnerabilidadePlugin')
 dotenv.config({path: '.env' })
 
 module.exports = {
-    postInfoPlugins : async(req, res)=>{
+    postInfoPlugins : async(req, res, urlFromFunc = null)=>{
         try {
             const {url} = req.body
             let plugins = await obterVersaoPluginsWp(url)
