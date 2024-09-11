@@ -5,8 +5,7 @@ const model = require("../model/temaSchema");
 module.exports = {
     postObterInforTema : async (req, res, urlFromFunc = null) => {
         try {
-            const {url} = req.body;
-
+            const url = req.body.url || urlFromFunc;
             const obterTema = await informacaoTema(url);
             let temaExistente = await model.findOne({ slug: obterTema.nomeTema });
             let objTema = {};
@@ -19,7 +18,6 @@ module.exports = {
                     const resultado = await model.create(dadosTema);
                     temaExistente = resultado;
                 }
-
                 objTema = {
                     style_name: temaExistente.name,
                     slug: obterTema.nomeTema,
@@ -42,9 +40,15 @@ module.exports = {
                     };
                 }
             }
-            return res.status(200).json(objTema)
+            if (res) {
+                return res.status(200).json(objTema)
+            }
+            return objTema
         } catch (error) {
-            return res.status(500).json({ erro: error.message });
+            if (res) {
+                return res.status(500).json({ erro: error.message });
+            }
+            throw new Error(error.message);
         }
     }
 }

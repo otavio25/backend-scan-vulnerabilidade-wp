@@ -6,8 +6,8 @@ const model = require("../model/versaoWpSchemaModel");
 module.exports = {
     postInforVersaoWordPress : async (req, res, urlFromFunc = null)=>{
         try {
-            const {url, versaoWp} = req.body
-            console.log("url: ", url)
+            const {versaoWp} = req.body
+            const url = req.body.url || urlFromFunc;
             let versao
             let hashFile = []
             let versaoExistente
@@ -26,8 +26,8 @@ module.exports = {
                 const dadosApi = apiWp.data;
                 versaoExistente = {
                     version:{
-                    number: versao,
-                    status: dadosApi[versao]
+                        number: versao,
+                        status: dadosApi[versao] || null
                     },
                     files: hashFile
                 }
@@ -36,13 +36,18 @@ module.exports = {
             resultado = {
                 version: {
                     number: versaoExistente.version.number,
-                    status: versaoExistente.version.status,
+                    status: versaoExistente.version.status !== undefined ? versaoExistente.version.status : null
                 },
             };
-            console.log("resultado: ", resultado)
-            return res.status(200).json(resultado)
+            if (res) {
+                return res.status(200).json(resultado);
+            }
+            return resultado
         } catch (error) {
-            return res.status(500).json({ erro: error.message });
+            if (res) {
+                return res.status(500).json({ erro: error.message });
+            }
+            throw new Error(error.message);
         }
     }
 }

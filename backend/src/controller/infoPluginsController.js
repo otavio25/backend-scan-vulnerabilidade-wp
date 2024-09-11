@@ -9,7 +9,7 @@ dotenv.config({path: '.env' })
 module.exports = {
     postInfoPlugins : async(req, res, urlFromFunc = null)=>{
         try {
-            const {url} = req.body
+            const url = req.body.url || urlFromFunc;
             let plugins = await obterVersaoPluginsWp(url)
             let objetoInfoPlugins = {}
             await Promise.all(
@@ -38,11 +38,15 @@ module.exports = {
                     }
                 })
             )
-            console.log({plugins: objetoInfoPlugins})
-            return res.status(200).json({plugins: objetoInfoPlugins})
+            if (res) {
+                return res.status(200).json({plugins: objetoInfoPlugins})
+            }
+            return {plugins: objetoInfoPlugins}
         } catch (error) {
-            console.log(error.message)
-            return res.status(500).json("Erro no servidor: ", error.message)
+            if (res) {
+                return res.status(500).json("Erro no servidor: ", error.message)
+            }
+            throw new Error(error.message);
         }
     }
 }
