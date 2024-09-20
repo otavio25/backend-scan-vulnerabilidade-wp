@@ -1,5 +1,4 @@
 const axios = require('axios')
-const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const model = require('../model/pluginSchemaModel')
 const obterVersaoPluginsWp = require('../obterVersaoPluginsWp')
@@ -28,9 +27,21 @@ module.exports = {
                         objetoInfoPlugins[plugin.nomePlugin] = propriedadesDesejadas
                     } catch (err) {
                         if (err.response && err.response.status === 404) {
-                            // Ignorar o erro 404 silenciosamente
-                            console.log(`Plugin não encontrado: ${plugin.nomePlugin} (Erro 404)`);
-                            infoPlugin = null;
+                            const propriedadesNaoEncontradas = {
+                                name: 'Não encontrado',
+                                slug: plugin.nomePlugin,
+                                last_updated: 'Não encontrado',
+                                version: {
+                                    number: plugin.versaoPlugin
+                                },
+                                added: 'Não encontrado',
+                                outdated: 'Não encontrado',
+                                latest_version: 'Não encontrado',
+                                vulnerabilities: []
+                            }
+                            const vulnerabilidadePlugin = await scanVulnerabilidadePlugin(propriedadesNaoEncontradas)
+                            propriedadesNaoEncontradas.vulnerabilities = vulnerabilidadePlugin
+                            objetoInfoPlugins[plugin.nomePlugin] = propriedadesNaoEncontradas
                         } else {
                             // Caso seja outro tipo de erro, pode logar ou tratar de outra forma
                             console.error(`Erro ao buscar informações do plugin ${plugin.nomePlugin}: ${err.message}`);

@@ -30,10 +30,10 @@ module.exports = {
             } catch(err){
                 if (err.response && err.response.status === 404) {
                     objTema = {
-                        style_name: null,
+                        style_name: 'Não encontrado',
                         slug: obterTema.nomeTema,
-                        latest_version: null,
-                        outdated: null,
+                        latest_version: 'Não encontrado',
+                        outdated: 'Não encontrado',
                         version: {
                             number: obterTema.versaoTema,
                         },

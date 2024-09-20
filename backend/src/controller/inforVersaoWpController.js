@@ -27,7 +27,7 @@ module.exports = {
                 versaoExistente = {
                     version:{
                         number: versao,
-                        status: dadosApi[versao] || null
+                        status: dadosApi[versao] || 'Não encontrado'
                     },
                     files: hashFile
                 }
@@ -36,7 +36,7 @@ module.exports = {
             resultado = {
                 version: {
                     number: versaoExistente.version.number,
-                    status: versaoExistente.version.status !== undefined ? versaoExistente.version.status : null
+                    status: versaoExistente.version.status !== undefined ? versaoExistente.version.status : 'Não encontrado'
                 },
             };
             if (res) {
